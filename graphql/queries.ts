@@ -1,27 +1,27 @@
 import { gql } from "@apollo/client";
 
 export const MOVIES_QUERY = gql`
-  query getMovies {
-    getMovies(query: "spider") {
+  query movies($query: String!) {
+    movies(query: $query) {
       id
-      original_title
+      originalTitle
       overview
-      release_date
-      vote_average
-      poster_path
+      releaseDate
+      voteAverage
+      posterPath
     }
   }
 `;
 
 export const MOVIE_QUERY = gql`
-  query getMovie($id: ID!) {
-    getMovie(id: $id) {
+  query movie($id: ID!) {
+    movie(id: $id) {
       id
-      original_title
+      originalTitle
       overview
-      release_date
-      vote_average
-      poster_path
+      releaseDate
+      voteAverage
+      posterPath
     }
   }
 `;

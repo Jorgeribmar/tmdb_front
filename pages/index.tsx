@@ -1,37 +1,81 @@
-import Image from "next/image";
-import { get } from "lodash";
-import withApollo from "../lib/withApollo";
-import { getDataFromTree } from "@apollo/client/react/ssr";
+/* eslint-disable @next/next/link-passhref */
 import Link from "next/link";
-import { GetMoviesQuery, useGetMoviesQuery } from "../generated/movies";
+import React, { useState } from "react";
+import { useLazyQuery } from "@apollo/client";
+import { MOVIES_QUERY } from "../graphql/queries";
+import { Input } from "baseui/input";
+import { Button, SIZE } from "baseui/button";
+import { Card, StyledBody } from "baseui/card";
+import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
+import { BlockProps } from "baseui/block";
 
-function Movies() {
-  const { data } = useGetMoviesQuery();
+const Movies = () => {
+  const [inputQuery, setNewInputQuery] = useState("");
+  const [getMovies, { data, loading, error }] = useLazyQuery(MOVIES_QUERY);
 
-  const movies = get(data, "getMovies", []) as GetMoviesQuery["getMovies"];
+  const itemProps: BlockProps = {
+    display: "inline-flex",
+    margin: "5px",
+  };
 
-  const myLoader = ({ src }) => {
-    return `https://image.tmdb.org/t/p/w500${src}`;
+  const getUI = () => {
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error</div>;
+
+    if (data) {
+      const elements = data.movies.map((movie) => {
+        return (
+          <FlexGrid key={movie.id} {...itemProps}>
+            <FlexGridItem>
+              <Link
+                href={{ pathname: "/movies/[id]", query: { id: movie.id } }}
+              >
+                <Card
+                  overrides={{ Root: { style: { width: "200px" } } }}
+                  headerImage={
+                    movie.posterPath
+                      ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
+                      : `https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482930.jpg`
+                  }
+                  //title={movie.originalTitle}
+                >
+                  <StyledBody>{movie.originalTitle}</StyledBody>
+                </Card>
+              </Link>
+            </FlexGridItem>
+          </FlexGrid>
+        );
+      });
+      return <div>{elements}</div>;
+    }
+
+    return <div>No results</div>;
+  };
+
+  const handleButtonClick = async () => {
+    getMovies({ variables: { query: inputQuery } });
   };
 
   return (
     <div>
-      {movies.map((movie) => (
-        <div key={movie.id}>
-          <Image
-            loader={myLoader}
-            src={movie.poster_path}
-            alt={movie.original_title}
-            width="200px"
-            height="200px"
-          />
-          <Link href="/movies/[id]" as={`/movies/${movie.id}`}>
-            {movie.original_title}
-          </Link>
-        </div>
-      ))}
+      <Input
+        size={SIZE.default}
+        clearable
+        onChange={(e) => {
+          setNewInputQuery(e.currentTarget.value);
+        }}
+        //onKeyDown={handleButtonClick}
+        placeholder="Search for you film"
+        type="search"
+        id="query"
+        name="query"
+      />
+      <Button onClick={handleButtonClick} size={SIZE.default}>
+        SEARCH
+      </Button>
+      {getUI()}
     </div>
   );
-}
+};
 
-export default withApollo(Movies, { getDataFromTree });
+export default Movies;
