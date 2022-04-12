@@ -1,8 +1,7 @@
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import "../styles/globals.css";
-import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
-import { LightTheme, BaseProvider, styled } from "baseui";
+import { LightTheme, BaseProvider } from "baseui";
 import { styletron } from "../styletron";
 
 const client = new ApolloClient({

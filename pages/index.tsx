@@ -1,21 +1,21 @@
-/* eslint-disable @next/next/link-passhref */
-import Link from "next/link";
 import React, { useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { MOVIES_QUERY } from "../graphql/queries";
-import { Input } from "baseui/input";
-import { Button, SIZE } from "baseui/button";
-import { Card, StyledBody } from "baseui/card";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { BlockProps } from "baseui/block";
+import SearchButton from "../components/searchButton";
+import SearchInput from "../components/searchInput";
+import MoviesCard from "../components/moviesCard";
+import { useStyletron } from "baseui";
 
 const Movies = () => {
+  const [css] = useStyletron();
   const [inputQuery, setNewInputQuery] = useState("");
   const [getMovies, { data, loading, error }] = useLazyQuery(MOVIES_QUERY);
 
   const itemProps: BlockProps = {
     display: "inline-flex",
-    margin: "5px",
+    margin: "2%",
   };
 
   const getUI = () => {
@@ -27,29 +27,40 @@ const Movies = () => {
         return (
           <FlexGrid key={movie.id} {...itemProps}>
             <FlexGridItem>
-              <Link
+              <MoviesCard
                 href={{ pathname: "/movies/[id]", query: { id: movie.id } }}
-              >
-                <Card
-                  overrides={{ Root: { style: { width: "200px" } } }}
-                  headerImage={
-                    movie.posterPath
-                      ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
-                      : `https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482930.jpg`
-                  }
-                  //title={movie.originalTitle}
-                >
-                  <StyledBody>{movie.originalTitle}</StyledBody>
-                </Card>
-              </Link>
+                headerImage={movie.posterPath}
+                title={movie.originalTitle}
+              ></MoviesCard>
             </FlexGridItem>
           </FlexGrid>
         );
       });
-      return <div>{elements}</div>;
+      return (
+        <div
+          className={css({
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          })}
+        >
+          {elements}
+        </div>
+      );
     }
 
-    return <div>No results</div>;
+    return (
+      <div
+        className={css({
+          color: "black",
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "1%",
+        })}
+      >
+        No results
+      </div>
+    );
   };
 
   const handleButtonClick = async () => {
@@ -58,21 +69,14 @@ const Movies = () => {
 
   return (
     <div>
-      <Input
-        size={SIZE.default}
-        clearable
+      <h1>TMDB Movies Search</h1>
+      <SearchInput
         onChange={(e) => {
           setNewInputQuery(e.currentTarget.value);
         }}
-        //onKeyDown={handleButtonClick}
-        placeholder="Search for you film"
-        type="search"
-        id="query"
-        name="query"
       />
-      <Button onClick={handleButtonClick} size={SIZE.default}>
-        SEARCH
-      </Button>
+      <SearchButton onClick={handleButtonClick} />
+
       {getUI()}
     </div>
   );
