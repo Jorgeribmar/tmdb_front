@@ -2,12 +2,11 @@ import { useStyletron } from "baseui";
 import { Input, InputProps, SIZE } from "baseui/input";
 import * as React from "react";
 
-const SearchInput: React.FC<InputProps> = ({ onChange }) => {
+const SearchInput: React.FC<InputProps> = (props) => {
   return (
     <Input
       size={SIZE.default}
       clearable
-      onChange={onChange}
       placeholder="Search for you film"
       type="search"
       id="query"
@@ -21,6 +20,7 @@ const SearchInput: React.FC<InputProps> = ({ onChange }) => {
           }),
         },
       }}
+      {...props}
     />
   );
 };

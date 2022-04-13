@@ -71,6 +71,11 @@ const Movies = () => {
     <div>
       <h1>TMDB Movies Search</h1>
       <SearchInput
+        onKeyPress={(e) => {
+          if (e.key === "Enter") {
+            handleButtonClick();
+          }
+        }}
         onChange={(e) => {
           setNewInputQuery(e.currentTarget.value);
         }}

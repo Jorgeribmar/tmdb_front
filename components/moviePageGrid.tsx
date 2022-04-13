@@ -2,6 +2,7 @@ import React from "react";
 import { useStyletron } from "baseui";
 import { Grid, Cell } from "baseui/layout-grid";
 import Image from "next/image";
+import StarsRating from "./voteAverage";
 
 const myLoader = ({ src }) => {
   return `https://image.tmdb.org/t/p/w500${src}`;
@@ -29,7 +30,9 @@ const Example = ({ posterPath, overview, releaseDate, voteAverage }) => {
           <h3>Release Date</h3>
           <Inner>{releaseDate}</Inner>
           <h3>Vote average</h3>
-          <Inner>{voteAverage}</Inner>
+          <Inner>
+            <StarsRating voteAverage={voteAverage}></StarsRating>
+          </Inner>
         </Cell>
       </Grid>
     </Outer>
