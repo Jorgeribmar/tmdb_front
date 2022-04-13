@@ -1,7 +1,7 @@
 import { MOVIE_QUERY } from "../../graphql/queries";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import Example from "../../components/moviePageGrid";
+import MoviePageGrid from "../../components/moviePageGrid";
 
 function Movie() {
   const router = useRouter();
@@ -21,12 +21,12 @@ function Movie() {
   return (
     <div>
       <h1>{data.movie.originalTitle}</h1>
-      <Example
+      <MoviePageGrid
         posterPath={data.movie.posterPath}
         overview={data.movie.overview}
         releaseDate={data.movie.releaseDate}
         voteAverage={data.movie.voteAverage}
-      ></Example>
+      ></MoviePageGrid>
     </div>
   );
 }

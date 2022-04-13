@@ -8,7 +8,7 @@ const myLoader = ({ src }) => {
   return `https://image.tmdb.org/t/p/w500${src}`;
 };
 
-const Example = ({ posterPath, overview, releaseDate, voteAverage }) => {
+const MoviePageGrid = ({ posterPath, overview, releaseDate, voteAverage }) => {
   return (
     <Outer>
       <Grid>
@@ -60,4 +60,4 @@ const Inner: React.FunctionComponent<{}> = ({ children }) => {
   return <div className={css({})}>{children}</div>;
 };
 
-export default Example;
+export default MoviePageGrid;
